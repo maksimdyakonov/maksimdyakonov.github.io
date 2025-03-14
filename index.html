@@ -6,30 +6,46 @@
     <title>Car Brands and Parts Quiz</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
         }
 
         h1 {
-            color: #333;
+            color: #ffffff;
             text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .quiz-container {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #2d2d2d;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .question {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            transition: transform 0.2s ease;
+        }
+
+        .question:hover {
+            transform: translateX(5px);
         }
 
         .question h3 {
-            margin: 0;
+            margin: 0 0 15px 0;
+            color: #e2e2e2;
+            font-size: 1.2rem;
         }
 
         .options {
@@ -38,47 +54,174 @@
         }
 
         .options li {
-            margin: 10px 0;
+            margin: 12px 0;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #3d3d3d;
+            transition: background-color 0.2s ease;
         }
 
-        .task {
-            margin-top: 10px;
-            margin-bottom: 20px;
+        .options li:hover {
+            background-color: #4a4a4a;
         }
 
         input[type="radio"], input[type="checkbox"] {
-            margin-right: 10px;
+            margin-right: 12px;
+            accent-color: #6366f1;
+        }
+
+        input[type="text"] {
+            background-color: #3d3d3d;
+            border: 2px solid #4a4a4a;
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: #ffffff;
+            width: 100%;
+            max-width: 300px;
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #6366f1;
         }
 
         button {
-            background-color: #4CAF50;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         button:hover {
-            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        canvas {
+            background-color: #3d3d3d;
+            border-radius: 8px;
+            margin-bottom: 10px;
         }
 
         .result {
             margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease-out;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .result-excellent {
+            background: linear-gradient(45deg, rgba(52, 211, 153, 0.2), rgba(16, 185, 129, 0.2));
+            color: #34D399;
+        }
+
+        .result-good {
+            background: linear-gradient(45deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            color: #818CF8;
+        }
+
+        .result-needsWork {
+            background: linear-gradient(45deg, rgba(239, 68, 68, 0.2), rgba(248, 113, 113, 0.2));
+            color: #EF4444;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .celebration {
+            animation: celebrate 0.5s ease-in-out;
+        }
+
+        .jumping-car {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 60px;
+            animation: jumpAndDrive 2s ease-in-out;
+            z-index: 1000;
+        }
+
+        @keyframes jumpAndDrive {
+            0% {
+                transform: translateX(-150%) translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateX(-75%) translateY(-100px) rotate(5deg);
+            }
+            50% {
+                transform: translateX(0%) translateY(0) rotate(0deg);
+            }
+            75% {
+                transform: translateX(75%) translateY(-100px) rotate(-5deg);
+            }
+            100% {
+                transform: translateX(150%) translateY(0) rotate(0deg);
+            }
+        }
+
+        .car-wheels {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            bottom: 0;
+            animation: wheelSpin 0.5s linear infinite;
+        }
+
+        @keyframes wheelSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .correct-answer {
+            background-color: rgba(52, 211, 153, 0.2);
+        }
+
+        .wrong-answer {
+            background-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .correct-text {
+            color: #34D399;
+            font-weight: bold;
+        }
+
+        .wrong-text {
+            color: #EF4444;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <h1>Car Brands, Parts, Math, and Physics Quiz</h1>
+    <h1>Викторина по Автомобильным Маркам, Запчастям, Математике и Физике</h1>
 
     <div class="quiz-container">
         <form id="quizForm">
 
             <div class="question">
-                <h3>1. Which car brand has a logo with a blue and white circle and is known for making luxury cars?</h3>
+                <h3>1. Какой автомобильный бренд имеет логотип с сине-белым кругом и известен производством люксовых автомобилей?</h3>
+                
                 <ul class="options">
                     <li><input type="radio" name="q1" value="BMW"> BMW</li>
                     <li><input type="radio" name="q1" value="Ford"> Ford</li>
@@ -86,14 +229,114 @@
                     <li><input type="radio" name="q1" value="Tesla"> Tesla</li>
                 </ul>
             </div>
-
             <div class="question">
-                <h3>2. Draw a picture of a car’s brake pedal (Use a piece of paper). What does it look like?</h3>
-                <p class="task">*This is a drawing task, so no answer field here*</p>
+                <h3>2. Нарисуйте педаль тормоза автомобиля на холсте ниже:</h3>
+                <canvas id="drawingCanvas" width="400" height="300" style="border:1px solid #000000;"></canvas>
+                <br>
+                <button type="button" onclick="clearCanvas()">Стереть все</button>
+                <button type="button" onclick="saveImage()">Сохранить</button>
+                <div id="drawingFeedback" class="result"></div>
+                <script>
+                    const canvas = document.getElementById('drawingCanvas');
+                    const ctx = canvas.getContext('2d');
+                    let isDrawing = false;
+                    let lastX = 0;
+                    let lastY = 0;
+
+                    canvas.addEventListener('mousedown', startDrawing);
+                    canvas.addEventListener('mousemove', draw);
+                    canvas.addEventListener('mouseup', stopDrawing);
+                    canvas.addEventListener('mouseout', stopDrawing);
+
+                    function startDrawing(e) {
+                        isDrawing = true;
+                        [lastX, lastY] = [e.offsetX, e.offsetY];
+                    }
+
+                    function draw(e) {
+                        if (!isDrawing) return;
+                        ctx.beginPath();
+                        ctx.strokeStyle = 'white';
+                        ctx.moveTo(lastX, lastY);
+                        ctx.lineTo(e.offsetX, e.offsetY);
+                        ctx.stroke();
+                        [lastX, lastY] = [e.offsetX, e.offsetY];
+                    }
+
+                    function stopDrawing() {
+                        isDrawing = false;
+                    }
+
+                    function clearCanvas() {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    }
+
+                    function saveImage() {
+                        const dataURL = canvas.toDataURL('image/png');
+                        const link = document.createElement('a');
+                        link.download = 'brake-pedal-drawing.png';
+                        link.href = dataURL;
+                        link.click();
+                    }
+
+                    function assessDrawing() {
+                        // Get the image data from the canvas
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const data = imageData.data;
+                        
+                        // Count white pixels (drawn lines)
+                        let whitePixels = 0;
+                        for (let i = 0; i < data.length; i += 4) {
+                            if (data[i] === 255 && data[i+1] === 255 && data[i+2] === 255) {
+                                whitePixels++;
+                            }
+                        }
+
+                        // Get feedback element
+                        const feedback = document.getElementById('drawingFeedback');
+                        
+                        // Basic shape detection
+                        if (whitePixels < 100) {
+                            feedback.textContent = "Please draw something first!";
+                            return false;
+                        }
+
+                        // Check if drawing covers reasonable area of canvas
+                        const minPixels = (canvas.width * canvas.height) * 0.05; // At least 5% coverage
+                        const maxPixels = (canvas.width * canvas.height) * 0.3;  // Max 30% coverage
+                        
+                        if (whitePixels < minPixels) {
+                            feedback.textContent = "Your drawing is too small. A brake pedal should be larger!";
+                            return false;
+                        } else if (whitePixels > maxPixels) {
+                            feedback.textContent = "Your drawing is too large. Try making it more compact!";
+                            return false;
+                        } else {
+                            // Check if drawing is in bottom half of canvas (where a pedal would typically be)
+                            let bottomHalfPixels = 0;
+                            for (let y = canvas.height/2; y < canvas.height; y++) {
+                                for (let x = 0; x < canvas.width; x++) {
+                                    const index = (y * canvas.width + x) * 4;
+                                    if (data[index] === 255 && data[index+1] === 255 && data[index+2] === 255) {
+                                        bottomHalfPixels++;
+                                    }
+                                }
+                            }
+                            
+                            if (bottomHalfPixels > whitePixels * 0.6) {
+                                feedback.textContent = "Good job! That looks like a brake pedal!";
+                                return true;
+                            } else {
+                                feedback.textContent = "Try drawing the pedal in the lower part of the canvas!";
+                                return false;
+                            }
+                        }
+                    }
+                </script>
             </div>
 
             <div class="question">
-                <h3>3. Which of the following is NOT a car brand?</h3>
+                <h3>3. Что из перечисленного НЕ является автомобильным брендом?</h3>
                 <ul class="options">
                     <li><input type="radio" name="q3" value="Apple"> Apple</li>
                     <li><input type="radio" name="q3" value="Honda"> Honda</li>
@@ -103,8 +346,8 @@
             </div>
 
             <div class="question">
-                <h3>4. If a car goes 80 kilometers in 1 hour, how far will it go in 4 hours at the same speed?</h3>
-                <input type="text" name="q4" placeholder="Your answer (in km)">
+                <h3>4. Если автомобиль проезжает 80 километров за 1 час, какое расстояние он проедет за 4 часа при той же скорости?</h3>
+                <input type="text" name="q4" placeholder="Ваш ответ (в км)">
             </div>
 
             <div class="question">
@@ -123,12 +366,23 @@
             </div>
 
             <div class="question">
-                <h3>7. If a car uses 40 liters of fuel to travel 400 kilometers, how many kilometers can it travel per liter of fuel?</h3>
-                <input type="text" name="q7" placeholder="Your answer (in km)">
+                <h3>7. Если автомобиль расходует 40 литров топлива на 400 километров, сколько километров он может проехать на одном литре топлива?</h3>
+                <input type="text" name="q7" placeholder="Ваш ответ (в км)">
+            </div>
+
+            <div class="question">
+                <h3>8. Какая деталь автомобиля на рисунке?</h3>
+                <img src="car_part.png" alt="Car Part" style="max-width: 400px; margin: 15px 0; border-radius: 8px;">
+                <ul class="options">
+                    <li><input type="radio" name="q8" value="alternator"> Генератор</li>
+                    <li><input type="radio" name="q8" value="starter"> Стартер</li>
+                    <li><input type="radio" name="q8" value="battery"> Аккумулятор</li>
+                    <li><input type="radio" name="q8" value="radiator"> Радиатор</li>
+                </ul>
             </div>
 
             <div class="task">
-                <button type="button" onclick="checkAnswers()">Submit</button>
+                <button type="button" onclick="checkAnswers()">Отправить</button>
             </div>
 
             <div class="result" id="result"></div>
@@ -138,36 +392,210 @@
 
     <script>
         function checkAnswers() {
+            // Disable all form inputs after submission
+            const form = document.getElementById('quizForm');
+            const inputs = form.querySelectorAll('input[type="radio"], input[type="text"], button');
+            inputs.forEach(input => input.disabled = true);
+            
+            // Disable canvas drawing
+            canvas.removeEventListener('mousedown', startDrawing);
+            canvas.removeEventListener('mousemove', draw);
+            canvas.removeEventListener('mouseup', stopDrawing);
+            canvas.removeEventListener('mouseout', stopDrawing);
+            
+            // Disable the clear, save, and check drawing buttons
+            document.querySelectorAll('button[onclick^="clear"], button[onclick^="save"], button[onclick^="assess"]')
+                .forEach(button => button.disabled = true);
+
             let score = 0;
             let resultText = "";
-
+            const resultDiv = document.getElementById('result');
+            
             // Question 1
             let q1 = document.querySelector('input[name="q1"]:checked');
-            if (q1 && q1.value === "BMW") score++;
+            if (q1) {
+                const li = q1.closest('li');
+                if (q1.value === "BMW") {
+                    score++;
+                    li.classList.add('correct-answer');
+                    li.innerHTML += '<span class="correct-text">✓</span>';
+                } else {
+                    li.classList.add('wrong-answer');
+                    li.innerHTML += '<span class="wrong-text">✗</span>';
+                }
+            }
+
+            // Question 2 - Check drawing
+            if (assessDrawing()) score++;
 
             // Question 3
             let q3 = document.querySelector('input[name="q3"]:checked');
-            if (q3 && q3.value === "Apple") score++;
+            if (q3) {
+                const li = q3.closest('li');
+                if (q3.value === "Apple") {
+                    score++;
+                    li.classList.add('correct-answer');
+                    li.innerHTML += '<span class="correct-text">✓</span>';
+                } else {
+                    li.classList.add('wrong-answer');
+                    li.innerHTML += '<span class="wrong-text">✗</span>';
+                }
+            }
 
             // Question 4
-            let q4 = document.querySelector('input[name="q4"]').value;
-            if (q4 === "320") score++;
+            let q4 = document.querySelector('input[name="q4"]');
+            if (q4.value) {
+                if (q4.value === "320") {
+                    score++;
+                    q4.classList.add('correct-answer');
+                    q4.insertAdjacentHTML('afterend', '<span class="correct-text">✓</span>');
+                } else {
+                    q4.classList.add('wrong-answer');
+                    q4.insertAdjacentHTML('afterend', '<span class="wrong-text">✗</span>');
+                }
+            }
 
             // Question 5
             let q5 = document.querySelector('input[name="q5"]:checked');
-            if (q5 && q5.value === "Friction") score++;
+            if (q5) {
+                const li = q5.closest('li');
+                if (q5.value === "Friction") {
+                    score++;
+                    li.classList.add('correct-answer');
+                    li.innerHTML += '<span class="correct-text">✓</span>';
+                } else {
+                    li.classList.add('wrong-answer');
+                    li.innerHTML += '<span class="wrong-text">✗</span>';
+                }
+            }
 
             // Question 6
-            let q6 = document.querySelector('input[name="q6"]').value;
-            if (q6 === "80") score++;
+            let q6 = document.querySelector('input[name="q6"]');
+            if (q6.value) {
+                if (q6.value === "80") {
+                    score++;
+                    q6.classList.add('correct-answer');
+                    q6.insertAdjacentHTML('afterend', '<span class="correct-text">✓</span>');
+                } else {
+                    q6.classList.add('wrong-answer');
+                    q6.insertAdjacentHTML('afterend', '<span class="wrong-text">✗</span>');
+                }
+            }
 
             // Question 7
-            let q7 = document.querySelector('input[name="q7"]').value;
-            if (q7 === "10") score++;
+            let q7 = document.querySelector('input[name="q7"]');
+            if (q7.value) {
+                if (q7.value === "10") {
+                    score++;
+                    q7.classList.add('correct-answer');
+                    q7.insertAdjacentHTML('afterend', '<span class="correct-text">✓</span>');
+                } else {
+                    q7.classList.add('wrong-answer');
+                    q7.insertAdjacentHTML('afterend', '<span class="wrong-text">✗</span>');
+                }
+            }
 
-            // Display the result
-            resultText = `You scored ${score} out of 6!`;
-            document.getElementById('result').innerText = resultText;
+            // Question 8
+            let q8 = document.querySelector('input[name="q8"]:checked');
+            if (q8) {
+                const li = q8.closest('li');
+                if (q8.value === "radiator") {
+                    score++;
+                    li.classList.add('correct-answer');
+                    li.innerHTML += '<span class="correct-text">✓</span>';
+                } else {
+                    li.classList.add('wrong-answer');
+                    li.innerHTML += '<span class="wrong-text">✗</span>';
+                }
+            }
+
+            // Remove any existing classes
+            resultDiv.className = 'result';
+            
+            // Calculate percentage
+            const percentage = (score / 8) * 100;
+            
+            // Determine result category and message
+            let resultClass;
+            if (percentage >= 80) {
+                resultText = `🎉 Outstanding! You scored ${score} out of 8! It seems you are Grigory`;
+                resultClass = 'result-excellent';
+            } else if (percentage >= 50) {
+                resultText = `👍 Good job! You scored ${score} out of 8! (${percentage}%)`;
+                resultClass = 'result-good';
+            } else {
+                resultText = `📚 Keep learning! You scored ${score} out of 8! (${percentage}%)`;
+                resultClass = 'result-needsWork';
+            }
+
+            // Apply the result
+            resultDiv.innerText = resultText;
+            resultDiv.classList.add(resultClass);
+            
+            // Trigger animations
+            setTimeout(() => {
+                resultDiv.classList.add('show');
+                resultDiv.classList.add('celebration');
+                
+                // Remove celebration animation after it completes
+                setTimeout(() => {
+                    resultDiv.classList.remove('celebration');
+                }, 500);
+            }, 100);
+
+            // Add confetti effect for excellent results
+            if (percentage >= 80) {
+                createConfetti();
+            }
+        }
+
+        function createConfetti() {
+            // Add the animated car
+            const car = document.createElement('div');
+            car.innerHTML = `
+                <svg class="jumping-car" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="20" width="80" height="25" rx="5" fill="#ff6b6b"/>
+                    <rect x="25" y="10" width="40" height="20" rx="3" fill="#4d96ff"/>
+                    <circle cx="25" cy="45" r="10" fill="#333" class="car-wheels"/>
+                    <circle cx="75" cy="45" r="10" fill="#333" class="car-wheels"/>
+                    <text x="50" y="35" text-anchor="middle" fill="white" font-size="12">Beep!</text>
+                </svg>
+            `;
+            document.body.appendChild(car);
+
+            // Remove the car after animation
+            setTimeout(() => {
+                car.remove();
+            }, 2000);
+
+            // Original confetti code
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    background: ${['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'][Math.floor(Math.random() * 5)]};
+                    left: ${Math.random() * 100}vw;
+                    top: -10px;
+                    opacity: 1;
+                    transform: rotate(${Math.random() * 360}deg);
+                    pointer-events: none;
+                    border-radius: 50%;
+                `;
+                
+                document.body.appendChild(confetti);
+
+                const animation = confetti.animate([
+                    { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate(${Math.random() * 100 - 50}px, ${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: 1000 + Math.random() * 2000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                });
+
+                animation.onfinish = () => confetti.remove();
+            }
         }
     </script>
 
