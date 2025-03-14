@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Brands and Parts Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .quiz-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .question h3 {
+            margin: 0;
+        }
+
+        .options {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .options li {
+            margin: 10px 0;
+        }
+
+        .task {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Car Brands, Parts, Math, and Physics Quiz</h1>
+
+    <div class="quiz-container">
+        <form id="quizForm">
+
+            <div class="question">
+                <h3>1. Which car brand has a logo with a blue and white circle and is known for making luxury cars?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q1" value="BMW"> BMW</li>
+                    <li><input type="radio" name="q1" value="Ford"> Ford</li>
+                    <li><input type="radio" name="q1" value="Toyota"> Toyota</li>
+                    <li><input type="radio" name="q1" value="Tesla"> Tesla</li>
+                </ul>
+            </div>
+
+            <div class="question">
+                <h3>2. Draw a picture of a car’s brake pedal (Use a piece of paper). What does it look like?</h3>
+                <p class="task">*This is a drawing task, so no answer field here*</p>
+            </div>
+
+            <div class="question">
+                <h3>3. Which of the following is NOT a car brand?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q3" value="Apple"> Apple</li>
+                    <li><input type="radio" name="q3" value="Honda"> Honda</li>
+                    <li><input type="radio" name="q3" value="Chevrolet"> Chevrolet</li>
+                    <li><input type="radio" name="q3" value="Nissan"> Nissan</li>
+                </ul>
+            </div>
+
+            <div class="question">
+                <h3>4. If a car goes 80 kilometers in 1 hour, how far will it go in 4 hours at the same speed?</h3>
+                <input type="text" name="q4" placeholder="Your answer (in km)">
+            </div>
+
+            <div class="question">
+                <h3>5. What force makes the car stop when you press the brake pedal?</h3>
+                <ul class="options">
+                    <li><input type="radio" name="q5" value="Gravity"> Gravity</li>
+                    <li><input type="radio" name="q5" value="Friction"> Friction</li>
+                    <li><input type="radio" name="q5" value="Air resistance"> Air resistance</li>
+                    <li><input type="radio" name="q5" value="Magnetism"> Magnetism</li>
+                </ul>
+            </div>
+
+            <div class="question">
+                <h3>6. A car travels 160 kilometers in 2 hours. What is the average speed of the car?</h3>
+                <input type="text" name="q6" placeholder="Your answer (in km/h)">
+            </div>
+
+            <div class="question">
+                <h3>7. If a car uses 40 liters of fuel to travel 400 kilometers, how many kilometers can it travel per liter of fuel?</h3>
+                <input type="text" name="q7" placeholder="Your answer (in km)">
+            </div>
+
+            <div class="task">
+                <button type="button" onclick="checkAnswers()">Submit</button>
+            </div>
+
+            <div class="result" id="result"></div>
+
+        </form>
+    </div>
+
+    <script>
+        function checkAnswers() {
+            let score = 0;
+            let resultText = "";
+
+            // Question 1
+            let q1 = document.querySelector('input[name="q1"]:checked');
+            if (q1 && q1.value === "BMW") score++;
+
+            // Question 3
+            let q3 = document.querySelector('input[name="q3"]:checked');
+            if (q3 && q3.value === "Apple") score++;
+
+            // Question 4
+            let q4 = document.querySelector('input[name="q4"]').value;
+            if (q4 === "320") score++;
+
+            // Question 5
+            let q5 = document.querySelector('input[name="q5"]:checked');
+            if (q5 && q5.value === "Friction") score++;
+
+            // Question 6
+            let q6 = document.querySelector('input[name="q6"]').value;
+            if (q6 === "80") score++;
+
+            // Question 7
+            let q7 = document.querySelector('input[name="q7"]').value;
+            if (q7 === "10") score++;
+
+            // Display the result
+            resultText = `You scored ${score} out of 6!`;
+            document.getElementById('result').innerText = resultText;
+        }
+    </script>
+
+</body>
+</html>
