@@ -114,14 +114,9 @@
             text-align: center;
             padding: 15px;
             border-radius: 8px;
-            opacity: 0;
+            opacity: 1;
             transform: scale(0.8);
             transition: all 0.5s ease-out;
-        }
-
-        .result.show {
-            opacity: 1;
-            transform: scale(1);
         }
 
         .result-excellent {
@@ -235,6 +230,7 @@
                 <br>
                 <button type="button" onclick="clearCanvas()">Стереть все</button>
                 <button type="button" onclick="saveImage()">Сохранить</button>
+                <button type="button" onclick="assessDrawing()">Проверить</button>
                 <div id="drawingFeedback" class="result"></div>
                 <script>
                     const canvas = document.getElementById('drawingCanvas');
@@ -284,11 +280,25 @@
                         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         const data = imageData.data;
                         
-                        // Count white pixels (drawn lines)
+                        // Count white pixels and track boundaries
                         let whitePixels = 0;
-                        for (let i = 0; i < data.length; i += 4) {
-                            if (data[i] === 255 && data[i+1] === 255 && data[i+2] === 255) {
-                                whitePixels++;
+                        let minX = canvas.width;
+                        let maxX = 0;
+                        let minY = canvas.height;
+                        let maxY = 0;
+
+                        // Scan the image data
+                        for (let y = 0; y < canvas.height; y++) {
+                            for (let x = 0; x < canvas.width; x++) {
+                                const index = (y * canvas.width + x) * 4;
+                                if (data[index] === 255 && data[index+1] === 255 && data[index+2] === 255) {
+                                    whitePixels++;
+                                    // Update boundaries
+                                    minX = Math.min(minX, x);
+                                    maxX = Math.max(maxX, x);
+                                    minY = Math.min(minY, y);
+                                    maxY = Math.max(maxY, y);
+                                }
                             }
                         }
 
@@ -297,40 +307,11 @@
                         
                         // Basic shape detection
                         if (whitePixels < 100) {
-                            feedback.textContent = "Please draw something first!";
+                            feedback.textContent = "Пожалуйста, нарисуйте что-нибудь!";
                             return false;
                         }
-
-                        // Check if drawing covers reasonable area of canvas
-                        const minPixels = (canvas.width * canvas.height) * 0.05; // At least 5% coverage
-                        const maxPixels = (canvas.width * canvas.height) * 0.3;  // Max 30% coverage
-                        
-                        if (whitePixels < minPixels) {
-                            feedback.textContent = "Your drawing is too small. A brake pedal should be larger!";
-                            return false;
-                        } else if (whitePixels > maxPixels) {
-                            feedback.textContent = "Your drawing is too large. Try making it more compact!";
-                            return false;
-                        } else {
-                            // Check if drawing is in bottom half of canvas (where a pedal would typically be)
-                            let bottomHalfPixels = 0;
-                            for (let y = canvas.height/2; y < canvas.height; y++) {
-                                for (let x = 0; x < canvas.width; x++) {
-                                    const index = (y * canvas.width + x) * 4;
-                                    if (data[index] === 255 && data[index+1] === 255 && data[index+2] === 255) {
-                                        bottomHalfPixels++;
-                                    }
-                                }
-                            }
-                            
-                            if (bottomHalfPixels > whitePixels * 0.6) {
-                                feedback.textContent = "Good job! That looks like a brake pedal!";
-                                return true;
-                            } else {
-                                feedback.textContent = "Try drawing the pedal in the lower part of the canvas!";
-                                return false;
-                            }
-                        }
+                        feedback.textContent = "Вы уверены?";
+                        return true;
                     }
                 </script>
             </div>
