@@ -209,7 +209,7 @@
 </head>
 <body>
 
-    <h1>Викторина по Автомобильным Маркам, Запчастям, Математике и Физике</h1>
+    <h1>Викторина по автомобильным маркам, запчастям, Математике и Физике</h1>
 
     <div class="quiz-container">
         <form id="quizForm">
@@ -239,24 +239,59 @@
                     let lastX = 0;
                     let lastY = 0;
 
+                    // Add touch event listeners alongside mouse events
                     canvas.addEventListener('mousedown', startDrawing);
                     canvas.addEventListener('mousemove', draw);
                     canvas.addEventListener('mouseup', stopDrawing);
                     canvas.addEventListener('mouseout', stopDrawing);
 
+                    // Add touch events
+                    canvas.addEventListener('touchstart', handleTouchStart);
+                    canvas.addEventListener('touchmove', handleTouchMove);
+                    canvas.addEventListener('touchend', stopDrawing);
+                    canvas.addEventListener('touchcancel', stopDrawing);
+
+                    // Modify start drawing to work with both mouse and touch
                     function startDrawing(e) {
                         isDrawing = true;
-                        [lastX, lastY] = [e.offsetX, e.offsetY];
+                        const pos = getPosition(e);
+                        [lastX, lastY] = [pos.x, pos.y];
                     }
 
+                    // Handle touch start separately to prevent scrolling
+                    function handleTouchStart(e) {
+                        e.preventDefault(); // Prevent scrolling
+                        startDrawing(e.touches[0]);
+                    }
+
+                    // Handle touch move with scroll prevention
+                    function handleTouchMove(e) {
+                        e.preventDefault(); // Prevent scrolling
+                        draw(e.touches[0]);
+                    }
+
+                    // Modified draw function to work with both mouse and touch
                     function draw(e) {
                         if (!isDrawing) return;
+                        
+                        const pos = getPosition(e);
                         ctx.beginPath();
                         ctx.strokeStyle = 'white';
+                        ctx.lineWidth = 2;
+                        ctx.lineCap = 'round';
+                        ctx.lineJoin = 'round';
                         ctx.moveTo(lastX, lastY);
-                        ctx.lineTo(e.offsetX, e.offsetY);
+                        ctx.lineTo(pos.x, pos.y);
                         ctx.stroke();
-                        [lastX, lastY] = [e.offsetX, e.offsetY];
+                        [lastX, lastY] = [pos.x, pos.y];
+                    }
+
+                    // Helper function to get position for both mouse and touch events
+                    function getPosition(e) {
+                        const rect = canvas.getBoundingClientRect();
+                        const x = (e.clientX || e.pageX) - rect.left;
+                        const y = (e.clientY || e.pageY) - rect.top;
+                        return { x, y };
                     }
 
                     function stopDrawing() {
@@ -391,7 +426,7 @@
             let score = 0;
             let resultText = "";
             const resultDiv = document.getElementById('result');
-            
+
             // Question 1
             let q1 = document.querySelector('input[name="q1"]:checked');
             if (q1) {
